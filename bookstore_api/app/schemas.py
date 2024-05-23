@@ -1,4 +1,4 @@
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods, arguments-renamed, arguments-differ
 
 """
 Schemas for the bookstore application.
@@ -6,17 +6,26 @@ Schemas for the bookstore application.
 
 from datetime import date
 from typing import List
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict
 
 class BookBase(BaseModel):
+    """
+    Base schema for a book.
+    """
     title: str
     publication_date: date
 
 class BookCreate(BookBase):
+    """
+    Schema for creating a book.
+    """
     author_ids: List[int]
     genre_ids: List[int]
 
 class Book(BookBase):
+    """
+    Schema for a book, including its ID and relationships.
+    """
     id: int
     authors: List[int]  # Only return author IDs
     genres: List[int]   # Only return genre IDs
@@ -34,24 +43,40 @@ class Book(BookBase):
     model_config = ConfigDict(from_attributes=True)
 
 class AuthorBase(BaseModel):
+    """
+    Base schema for an author.
+    """
     full_name: str
     birth_date: date
 
 class AuthorCreate(AuthorBase):
-    pass
+    """
+    Schema for creating an author.
+    """
 
 class Author(AuthorBase):
+    """
+    Schema for an author, including their ID.
+    """
     id: int
 
     model_config = ConfigDict(from_attributes=True)
 
 class GenreBase(BaseModel):
+    """
+    Base schema for a genre.
+    """
     name: str
 
 class GenreCreate(GenreBase):
-    pass
+    """
+    Schema for creating a genre.
+    """
 
 class Genre(GenreBase):
+    """
+    Schema for a genre, including its ID.
+    """
     id: int
 
     model_config = ConfigDict(from_attributes=True)

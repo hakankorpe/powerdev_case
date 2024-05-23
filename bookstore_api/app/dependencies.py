@@ -1,13 +1,17 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from .config import settings
+# pylint: disable=cyclic-import
 
-engine = create_engine(settings.SQLALCHEMY_DATABASE_URL)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+"""
+Dependencies for the bookstore application.
+"""
+
+from app.database import SessionLocal
 
 def get_db():
-    db = TestingSessionLocal()
+    """
+    Dependency to get the database session.
+    """
+    db_session = SessionLocal()
     try:
-        yield db
+        yield db_session
     finally:
-        db.close()
+        db_session.close()

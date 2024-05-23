@@ -13,5 +13,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 def init_db():
-    import app.models  # Ensure all models are imported before creating tables
+    """
+    Initialize the database and create tables.
+    """
+    import app.models  # noqa: F401, pylint: disable=import-outside-toplevel, unused-import
     Base.metadata.create_all(bind=engine)

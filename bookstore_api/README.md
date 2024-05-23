@@ -6,7 +6,11 @@ A simple FastAPI application for managing books, authors, and genres.
 
 - List all books, authors, and genres
 - Retrieve books by specific authors and genres
-- Create new books
+- Create new books, authors, and genres
+- Update existing books
+- Delete books
+- List all books of a specific author
+- List all books in a specific genre
 
 ## Installation
 
@@ -21,7 +25,7 @@ A simple FastAPI application for managing books, authors, and genres.
 
     ```bash
     python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    source venv/bin/activate
     ```
 
 3. Install the dependencies:
@@ -53,8 +57,17 @@ The interactive API documentation is available at:
 
 ## Running Tests
 
-- To run tests, use:
+To run tests, use:
 
 ```bash
 pytest
+```
+
+## Code Coverage
+
+To generate a code coverage report, run:
+
+```bash
+coverage run -m pytest
+coverage report -m
 ```
