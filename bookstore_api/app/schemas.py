@@ -6,55 +6,52 @@ Schemas for the bookstore application.
 
 from datetime import date
 from typing import List
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, ConfigDict
 
 class BookBase(BaseModel):
-    """Schema for the base book model."""
     title: str
     publication_date: date
 
 class BookCreate(BookBase):
-    """Schema for creating a book with author and genre IDs."""
     author_ids: List[int]
     genre_ids: List[int]
 
 class Book(BookBase):
-    """Schema for representing a book with nested author and genre IDs."""
     id: int
-    authors: List[int]
-    genres: List[int]
+    authors: List[int]  # Only return author IDs
+    genres: List[int]   # Only return genre IDs
 
-    class Config:
-        """Pydantic configuration to use ORM mode."""
-        orm_mode = True
+    @classmethod
+    def model_validate(cls, model):
+        return cls(
+            id=model.id,
+            title=model.title,
+            publication_date=model.publication_date,
+            authors=[author.id for author in model.authors],
+            genres=[genre.id for genre in model.genres]
+        )
+
+    model_config = ConfigDict(from_attributes=True)
 
 class AuthorBase(BaseModel):
-    """Schema for the base author model."""
     full_name: str
     birth_date: date
 
 class AuthorCreate(AuthorBase):
-    """Schema for creating an author."""
+    pass
 
 class Author(AuthorBase):
-    """Schema for representing an author."""
     id: int
 
-    class Config:
-        """Pydantic configuration to use ORM mode."""
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class GenreBase(BaseModel):
-    """Schema for the base genre model."""
     name: str
 
 class GenreCreate(GenreBase):
-    """Schema for creating a genre."""
+    pass
 
 class Genre(GenreBase):
-    """Schema for representing a genre."""
     id: int
 
-    class Config:
-        """Pydantic configuration to use ORM mode."""
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

@@ -1,9 +1,9 @@
 """
 Main module for the FastAPI application.
 """
-
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from typing import List
 from . import models, schemas, database
 
 app = FastAPI()
@@ -46,7 +46,7 @@ def create_book(book: schemas.BookCreate, db_session: Session = Depends(get_db))
 
     db_session.commit()
     db_session.refresh(db_book)
-    return db_book
+    return schemas.Book.model_validate(db_book)  # Updated
 
 @app.get("/books/{book_id}", response_model=schemas.Book)
 def read_book(book_id: int, db_session: Session = Depends(get_db)):
@@ -56,4 +56,48 @@ def read_book(book_id: int, db_session: Session = Depends(get_db)):
     book = db_session.query(models.Book).filter(models.Book.id == book_id).first()
     if book is None:
         raise HTTPException(status_code=404, detail="Book not found")
-    return book
+    return schemas.Book.model_validate(book)  # Updated
+
+@app.get("/genres/", response_model=List[schemas.Genre])
+def list_genres(db_session: Session = Depends(get_db)):
+    """
+    List all genres.
+    """
+    genres = db_session.query(models.Genre).all()
+    return [schemas.Genre.model_validate(genre) for genre in genres]  # Updated
+
+@app.get("/books/", response_model=List[schemas.Book])
+def list_books(db_session: Session = Depends(get_db)):
+    """
+    List all books.
+    """
+    books = db_session.query(models.Book).all()
+    return [schemas.Book.model_validate(book) for book in books]  # Updated
+
+@app.get("/authors/", response_model=List[schemas.Author])
+def list_authors(db_session: Session = Depends(get_db)):
+    """
+    List all authors.
+    """
+    authors = db_session.query(models.Author).all()
+    return [schemas.Author.model_validate(author) for author in authors]  # Updated
+
+@app.get("/authors/{author_id}/books", response_model=List[schemas.Book])
+def list_books_by_author(author_id: int, db_session: Session = Depends(get_db)):
+    """
+    List all books by a specific author.
+    """
+    author = db_session.query(models.Author).filter(models.Author.id == author_id).first()
+    if author is None:
+        raise HTTPException(status_code=404, detail="Author not found")
+    return [schemas.Book.model_validate(book) for book in author.books]  # Updated
+
+@app.get("/genres/{genre_id}/books", response_model=List[schemas.Book])
+def list_books_by_genre(genre_id: int, db_session: Session = Depends(get_db)):
+    """
+    List all books in a specific genre.
+    """
+    genre = db_session.query(models.Genre).filter(models.Genre.id == genre_id).first()
+    if genre is None:
+        raise HTTPException(status_code=404, detail="Genre not found")
+    return [schemas.Book.model_validate(book) for book in genre.books]  # Updated
