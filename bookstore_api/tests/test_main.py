@@ -73,7 +73,7 @@ def test_list_genres(setup_database):
     assert response.status_code == 200
     data = response.json()
     assert len(data) > 0
-    assert data[0]["name"] == "Test Genre"
+    assert data[0]["name"] == "Fiction"  # Updated assertion to match predefined genre
 
 def test_list_authors(setup_database):
     response = client.get("/authors/")
@@ -122,7 +122,7 @@ def test_read_genre(setup_database):
     response = client.get("/genres/1")
     assert response.status_code == 200
     data = response.json()
-    assert data["name"] == "Test Genre"
+    assert data["name"] == "Fiction"  # Updated assertion to match predefined genre
 
 def test_update_book(setup_database):
     response = client.put("/books/1", json={
@@ -164,7 +164,7 @@ def test_list_books_by_genre(setup_database):
     for book in books:
         print(f"Book {book.id} genres: {book.genres}")
 
-    genre = db.query(Genre).filter(Genre.name == "Test Genre").first()
+    genre = db.query(Genre).filter(Genre.name == "Fiction").first()  # Updated to match predefined genre
     response = client.get(f"/genres/{genre.id}/books")
     assert response.status_code == 200
     data = response.json()

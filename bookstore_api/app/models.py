@@ -4,7 +4,7 @@
 Models for the bookstore application.
 """
 from sqlalchemy import Column, Integer, String, Date, Table, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from app.database import Base
 
 # Association tables for many-to-many relationships
@@ -48,4 +48,9 @@ class Genre(Base):
     __tablename__ = 'genres'
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
-    books = relationship('Book', secondary=book_genres, back_populates='genres')
+    parent_id = Column(Integer, ForeignKey('genres.id'), nullable=True)
+    parent = relationship(
+        'Genre',
+        remote_side=[id],
+        backref=backref('subgenres', remote_side=[parent_id]))
+    books = relationship("Book", secondary=book_genres, back_populates="genres")

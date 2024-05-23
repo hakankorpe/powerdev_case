@@ -5,7 +5,7 @@ Schemas for the bookstore application.
 """
 
 from datetime import date
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, ConfigDict
 
 class BookBase(BaseModel):
@@ -78,5 +78,17 @@ class Genre(GenreBase):
     Schema for a genre, including its ID.
     """
     id: int
+    subgenres: Optional[List['Genre']] = None
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        """
+        Configuration class for the Genre Pydantic model.
+
+        Attributes:
+            from_attributes (bool): If set to True, 
+                allows the Pydantic model to be created from an ORM object using attribute names.
+            arbitrary_types_allowed (bool): If set to True, 
+                allows Pydantic to validate and serialize arbitrary types.
+        """
+        from_attributes = True
+        arbitrary_types_allowed = True

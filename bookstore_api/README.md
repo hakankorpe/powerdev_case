@@ -12,6 +12,28 @@ A simple FastAPI application for managing books, authors, and genres.
 - List all books of a specific author
 - List all books in a specific genre
 
+## API Endpoints
+
+### Books
+- **POST /books/**: Add a new book
+- **GET /books/{book_id}**: Get details of a specific book
+- **PUT /books/{book_id}**: Update details of a specific book
+- **DELETE /books/{book_id}**: Delete a specific book
+- **GET /books/**: List all books
+
+### Authors
+- **POST /authors/**: Add a new author
+- **GET /authors/{author_id}**: Get details of a specific author
+- **PUT /authors/{author_id}**: Update details of a specific author
+- **DELETE /authors/{author_id}**: Delete a specific author
+- **GET /authors/**: List all authors
+- **GET /authors/{author_id}/books**: List all books of a specific author
+
+### Genres
+- **GET /genres/**: List all genres
+- **GET /genres/{genre_id}**: Get details of a specific genre
+- **GET /genres/{genre_id}/books**: List all books in a specific genre
+
 ## Installation
 
 1. Clone the repository:
@@ -55,14 +77,6 @@ The interactive API documentation is available at:
 - Swagger UI: http://127.0.0.1:8000/docs
 - ReDoc: http://127.0.0.1:8000/redoc
 
-## Running Tests
-
-To run tests, use:
-
-```bash
-pytest
-```
-
 ## Code Coverage
 
 To generate a code coverage report, run:
@@ -71,3 +85,12 @@ To generate a code coverage report, run:
 coverage run -m pytest
 coverage report -m
 ```
+
+## Running Tests
+
+To run tests, execute `pytest` in the project root directory. Ensure the `test.db` file is deleted before running tests to avoid conflicts.
+
+## Development Environment
+
+This project uses SQLite for the database and FastAPI for the API framework. Ensure you have Python 3.11 or higher installed.
+
