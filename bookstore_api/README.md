@@ -7,8 +7,8 @@ A simple FastAPI application for managing books, authors, and genres.
 - List all books, authors, and genres
 - Retrieve books by specific authors and genres
 - Create new books, authors, and genres
-- Update existing books
-- Delete books
+- Update existing books and authors
+- Delete books and authors
 - List all books of a specific author
 - List all books in a specific genre
 

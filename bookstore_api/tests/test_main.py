@@ -170,3 +170,21 @@ def test_list_books_by_genre(setup_database):
     data = response.json()
     print(f"Books in Genre {genre.id}: {data}")  # Debugging statement
     assert len(data) > 0
+
+def test_update_author(setup_database):
+    response = client.put("/authors/1", json={
+        "full_name": "Updated Author",
+        "birth_date": "1970-01-01"
+    })
+    assert response.status_code == 200
+    data = response.json()
+    assert data["full_name"] == "Updated Author"
+    assert data["birth_date"] == "1970-01-01"
+
+def test_delete_author(setup_database):
+    response = client.delete("/authors/1")
+    assert response.status_code == 204  # No Content
+
+    # Verify the author was deleted
+    response = client.get("/authors/1")
+    assert response.status_code == 404  # Not Found

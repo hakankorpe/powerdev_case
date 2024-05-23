@@ -21,6 +21,12 @@ def get_db():
     finally:
         db_session.close()
 
+# Add the root endpoint
+@app.get("/")
+def read_root():
+    """Root endpoint returning a welcome message."""
+    return {"message": "Welcome to the Bookstore API!"}
+
 @app.post("/books/", response_model=schemas.Book)
 def create_book(book: schemas.BookCreate, db_session: Session = Depends(get_db)):
     """
@@ -188,3 +194,33 @@ def list_books_by_genre(genre_id: int, db_session: Session = Depends(get_db)):
     if genre is None:
         raise HTTPException(status_code=404, detail="Genre not found")
     return [schemas.Book.from_orm(book) for book in genre.books]
+
+@app.put("/authors/{author_id}", response_model=schemas.Author)
+def update_author(
+    author_id: int,
+    author: schemas.AuthorCreate,
+    db_session: Session = Depends(get_db)):
+    """
+    Update an existing author.
+    """
+    db_author = db_session.query(models.Author).filter(models.Author.id == author_id).first()
+    if db_author is None:
+        raise HTTPException(status_code=404, detail="Author not found")
+    db_author.full_name = author.full_name
+    db_author.birth_date = author.birth_date
+
+    db_session.commit()
+    db_session.refresh(db_author)
+    return schemas.Author.from_orm(db_author)
+
+@app.delete("/authors/{author_id}", response_model=None, status_code=204)
+def delete_author(author_id: int, db_session: Session = Depends(get_db)):
+    """
+    Delete an author.
+    """
+    db_author = db_session.query(models.Author).filter(models.Author.id == author_id).first()
+    if db_author is None:
+        raise HTTPException(status_code=404, detail="Author not found")
+
+    db_session.delete(db_author)
+    db_session.commit()
