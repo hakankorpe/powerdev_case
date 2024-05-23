@@ -39,8 +39,8 @@ A simple FastAPI application for managing books, authors, and genres.
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/hakankorpe/bookstore_api.git
-    cd bookstore_api
+    git clone https://github.com/hakankorpe/powerdev_case.git
+    cd powerdev_case/bookstore_api
     ```
 
 2. Create and activate a virtual environment:
